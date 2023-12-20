@@ -1,0 +1,19 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: TestBench
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install iverilog and gtkwave
+        run: sudo -E apt-get -y install iverilog gtkwave
+      - name: Run TestBench
+        run: |
+          sed -i 's/`define N_OPERATE $stop/`define N_OPERATE $finish/g' ./top_sim_testbench.v
+          chmod +x ./make && ./make
