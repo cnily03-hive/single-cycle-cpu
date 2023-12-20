@@ -1,0 +1,8 @@
+.vscode/
+
+node_modules/
+node_modules/**
+
+*.vvp
+*.vcd
+*.out
