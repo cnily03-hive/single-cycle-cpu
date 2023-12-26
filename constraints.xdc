@@ -1,25 +1,35 @@
 set_property PACKAGE_PIN AC19 [get_ports clk]
-set_property PACKAGE_PIN H7 [get_ports led_cout]
+set_property PACKAGE_PIN H7 [get_ports led_cout_rst]
+set_property PACKAGE_PIN D5 [get_ports led_cout_clk]
 set_property PACKAGE_PIN Y3 [get_ports resetn]
+
+# SW18
 set_property PACKAGE_PIN AC21 [get_ports input_sel]
-set_property PACKAGE_PIN AC22 [get_ports is_auto_clk]
-set_property PACKAGE_PIN AC23 [get_ports btn_clk]
+# SW20
+set_property PACKAGE_PIN AC22 [get_ports cont_clk]
+# SW_STEP0
+set_property PACKAGE_PIN Y5   [get_ports btn_clkn]
+# SW_STEP1
+set_property PACKAGE_PIN V6   [get_ports cpu_rstn]
 
 set_property IOSTANDARD LVCMOS33 [get_ports clk]
-set_property IOSTANDARD LVCMOS33 [get_ports led_cout]
+set_property IOSTANDARD LVCMOS33 [get_ports led_cout_rst]
+set_property IOSTANDARD LVCMOS33 [get_ports led_cout_clk]
 set_property IOSTANDARD LVCMOS33 [get_ports resetn]
+
 set_property IOSTANDARD LVCMOS33 [get_ports input_sel]
-set_property IOSTANDARD LVCMOS33 [get_ports is_auto_clk]
-set_property IOSTANDARD LVCMOS33 [get_ports btn_clk]
+set_property IOSTANDARD LVCMOS33 [get_ports cont_clk]
+set_property IOSTANDARD LVCMOS33 [get_ports btn_clkn]
+set_property IOSTANDARD LVCMOS33 [get_ports cpu_rstn]
 
 # LCD
 set_property PACKAGE_PIN J25 [get_ports lcd_rst]
 set_property PACKAGE_PIN H18 [get_ports lcd_cs]
 set_property PACKAGE_PIN K16 [get_ports lcd_rs]
-set_property PACKAGE_PIN L8 [get_ports lcd_wr]
-set_property PACKAGE_PIN K8 [get_ports lcd_rd]
+set_property PACKAGE_PIN L8  [get_ports lcd_wr]
+set_property PACKAGE_PIN K8  [get_ports lcd_rd]
 set_property PACKAGE_PIN J15 [get_ports lcd_bl_ctr]
-set_property PACKAGE_PIN H9 [get_ports {lcd_data_io[0]}]
+set_property PACKAGE_PIN H9  [get_ports {lcd_data_io[0]}]
 set_property PACKAGE_PIN K17 [get_ports {lcd_data_io[1]}]
 set_property PACKAGE_PIN J20 [get_ports {lcd_data_io[2]}]
 set_property PACKAGE_PIN M17 [get_ports {lcd_data_io[3]}]
@@ -66,7 +76,3 @@ set_property IOSTANDARD LVCMOS33 [get_ports ct_int]
 set_property IOSTANDARD LVCMOS33 [get_ports ct_sda]
 set_property IOSTANDARD LVCMOS33 [get_ports ct_scl]
 set_property IOSTANDARD LVCMOS33 [get_ports ct_rstn]
-
-
-
-

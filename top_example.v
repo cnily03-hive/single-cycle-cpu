@@ -3,7 +3,7 @@
 `include "io/InstMem.v"
 `include "io/DataMem.v"
 
-module TOP(
+module TOP (
     input  inclk, // CPU clock
     input  rstn,  // CPU reset
 
@@ -20,6 +20,8 @@ module TOP(
     wire DM_CS;
     wire DM_R;
     wire DM_W;
+    wire [31:0] test_rf_data; // ? TEST INTERFACE
+    wire [31:0] test_rf_addr; // ? TEST INTERFACE
 
     assign clk = inclk;
 
@@ -35,7 +37,9 @@ module TOP(
         PC,
         ALU_out,
         DM_addr,
-        DM_wdata
+        DM_wdata,
+        test_rf_addr, // ? TEST INTERFACE
+        test_rf_data  // ? TEST INTERFACE
     );
 
     InstMem imem(

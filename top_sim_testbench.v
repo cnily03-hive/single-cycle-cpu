@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "top_sim.v"
+`include "top_example.v"
 
 `define N_CLOCKS  32'd500
 `define N_OPERATE $stop

@@ -1,6 +1,14 @@
     ; function: Whether the year is leap year
     ; input: DM+0 = year
-    ; output: DM+1 = 1 if leap year, 0 otherwise
+    ; output: DM+8 = 1 if leap year, 0 otherwise
+    ; $0 -> $zero
+    ; $1 -> $s0
+    ; $2 -> $s1
+    ; $3 -> $s2
+    ; $4 -> $s3
+    ; $5 -> $s4
+    ; $6 -> $s5
+    ; $7 -> $t0
 
     sll   $zero, $zero, 0
 
@@ -38,6 +46,9 @@ N_IS_0:
     addi  $s5, $zero, 1         ; res = 1
 
 SAVE_0:
-    sw    $s5, 1($s0)           ; DM+1 = res
+    sw    $s5, 8($s0)           ; DM+8 = res
+
+END_0:
+    j     END_0                 ; goto END_0
 
     sll   $zero, $zero, 0

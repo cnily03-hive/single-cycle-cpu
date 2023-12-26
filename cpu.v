@@ -22,7 +22,10 @@ module CPU (
     output [31:0] o_PC_out,
     output [31:0] o_ALU_out,
     output [31:0] o_DM_addr,
-    output [31:0] o_DM_wdata
+    output [31:0] o_DM_wdata,
+
+    input  [31:0] test_rf_addr, // ? TEST INTERFACE
+    output [31:0] test_rf_data  // ? TEST INTERFACE
 );
 
     wire RF_W, M1, M2, M3, M4, M5, M6, SIGN_EXT, ZERO;
@@ -86,7 +89,9 @@ module CPU (
         MUX6_out,
         MUX2_out,
         RF_rs_out,
-        RF_rt_out
+        RF_rt_out,
+        test_rf_addr, // ? TEST INTERFACE
+        test_rf_data  // ? TEST INTERFACE
     );
 
     ALU cpu_aluu(
