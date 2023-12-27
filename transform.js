@@ -243,21 +243,25 @@ function asm2bin(input_asm_lines, options = {
         str = asm_num_string.trim().toLowerCase()
         if (/^#-?\d+$/i.test(str)) return parseInt(str.slice(1), 10)
 
-        let neg = /^-/i.test(str) ? -1 : 1
+        let sign = 1
+        if (/^-/i.test(str)) {
+            sign = -1
+            str = str.slice(1)
+        }
 
-        if (/^0x[0-9a-fA-F]+$/.test(str)) return parseInt(str.slice(2), 16) * neg
-        if (/^0b[01]+$/.test(str)) return parseInt(str.slice(2), 2) * neg
-        if (/^0[0-7]+$/.test(str)) return parseInt(str.slice(1), 8) * neg
+        if (/^0x[0-9a-fA-F]+$/.test(str)) return parseInt(str.slice(2), 16) * sign
+        if (/^0b[01]+$/.test(str)) return parseInt(str.slice(2), 2) * sign
+        if (/^0[0-7]+$/.test(str)) return parseInt(str.slice(1), 8) * sign
 
-        if (/^0x[0-9a-fA-F]+[Hh]$/.test(str)) return parseInt(str.slice(2, -1), 16) * neg
-        if (/^0b[01]+[Bb]$/.test(str)) return parseInt(str.slice(2, -1), 2) * neg
+        if (/^0x[0-9a-fA-F]+[Hh]$/.test(str)) return parseInt(str.slice(2, -1), 16) * sign
+        if (/^0b[01]+[Bb]$/.test(str)) return parseInt(str.slice(2, -1), 2) * sign
 
-        if (/^[0-9a-f]+H$/i.test(str)) return parseInt(str.slice(0, -1), 16) * neg
-        if (/^[01]+B$/i.test(str)) return parseInt(str.slice(0, -1), 2) * neg
-        if (/^[0-7]+[OQ]$/i.test(str)) return parseInt(str.slice(0, -1), 8) * neg
-        if (/^\d+D$/i.test(str)) return parseInt(str.slice(0, -1), 10) * neg
+        if (/^[0-9a-f]+H$/i.test(str)) return parseInt(str.slice(0, -1), 16) * sign
+        if (/^[01]+B$/i.test(str)) return parseInt(str.slice(0, -1), 2) * sign
+        if (/^[0-7]+[OQ]$/i.test(str)) return parseInt(str.slice(0, -1), 8) * sign
+        if (/^\d+D$/i.test(str)) return parseInt(str.slice(0, -1), 10) * sign
 
-        if (/^\d+$/i.test(str)) return parseInt(str, 10) * neg
+        if (/^\d+$/i.test(str)) return parseInt(str, 10) * sign
 
         io.error(`Line ${CurFileLine}: Invalid number format: ${asm_num_string}`).exit(1)
     }
