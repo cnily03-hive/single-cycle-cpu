@@ -171,12 +171,16 @@ module TOP_TouchDisplay (
 
     // CPU clock generation (100ns per clock cycle)
 
-    parameter FREQ_DIV = 100; // 1MHz, 1E-6s
+    parameter FREQ_DIV = 100; // 1MHz, 1E-6s (1us)
 
-    wire clk_1000ns;
+    wire clk_1000ns, clk_500ns;
     FreqDiv #(FREQ_DIV) clk_gen(
         clk,
         clk_1000ns
+    );
+    FreqDiv #(FREQ_DIV / 2) clk_gen2(
+        clk,
+        clk_500ns
     );
 
     // Debounce step button
@@ -249,7 +253,7 @@ module TOP_TouchDisplay (
     wire output1_update1 = DM_CS & DM_W & (DM_addr[31:0] == `OUTPUT1_ADDR);
     wire output1_update2 = DM_CS_ctl & DM_W_ctl & (DM_addr_ctl[31:0] == `OUTPUT1_ADDR);
     DFF dff1(
-        (output1_update1 & cpu_inclk) | (output1_update2 & clk_1000ns),
+        (output1_update1 | output1_update2) & clk_500ns,
         1, // Data Memory will never be reset by reset button
         output1_update2 ? DM_wdata_ctl : output1_update1 ? DM_wdata : output1,
         output1
@@ -258,7 +262,7 @@ module TOP_TouchDisplay (
     wire output2_update1 = DM_CS & DM_W & (DM_addr[31:0] == `OUTPUT2_ADDR);
     wire output2_update2 = DM_CS_ctl & DM_W_ctl & (DM_addr_ctl[31:0] == `OUTPUT2_ADDR);
     DFF dff2(
-        (output1_update1 & cpu_inclk) | (output1_update2 & clk_1000ns),
+        (output2_update1 | output2_update2) & clk_500ns,
         1, // Data Memory will never be reset by reset button
         output2_update2 ? DM_wdata_ctl : output2_update1 ? DM_wdata : output2,
         output2
