@@ -248,17 +248,13 @@ function asm2bin(input_asm_lines, options = {
         if (/^0x[0-9a-fA-F]+$/.test(str)) return parseInt(str.slice(2), 16) * neg
         if (/^0b[01]+$/.test(str)) return parseInt(str.slice(2), 2) * neg
         if (/^0[0-7]+$/.test(str)) return parseInt(str.slice(1), 8) * neg
-        if (/^0d\d+$/.test(str)) return parseInt(str.slice(2), 10) * neg
-        if (/^0o[0-7]+$/.test(str)) return parseInt(str.slice(2), 8) * neg
 
         if (/^0x[0-9a-fA-F]+[Hh]$/.test(str)) return parseInt(str.slice(2, -1), 16) * neg
         if (/^0b[01]+[Bb]$/.test(str)) return parseInt(str.slice(2, -1), 2) * neg
-        if (/^0o[0-7]+[Oo]$/.test(str)) return parseInt(str.slice(1, -1), 8) * neg
-        if (/^0d\d+[Dd]$/.test(str)) return parseInt(str.slice(2, -1), 10) * neg
 
         if (/^[0-9a-f]+H$/i.test(str)) return parseInt(str.slice(0, -1), 16) * neg
         if (/^[01]+B$/i.test(str)) return parseInt(str.slice(0, -1), 2) * neg
-        if (/^[0-7]+O$/i.test(str)) return parseInt(str.slice(0, -1), 8) * neg
+        if (/^[0-7]+[OQ]$/i.test(str)) return parseInt(str.slice(0, -1), 8) * neg
         if (/^\d+D$/i.test(str)) return parseInt(str.slice(0, -1), 10) * neg
 
         if (/^\d+$/i.test(str)) return parseInt(str, 10) * neg
@@ -334,11 +330,9 @@ function asm2bin(input_asm_lines, options = {
                 // absolute address
                 else if (/^0x[0-9a-fA-F]+$/.test(op3) ||
                     /^0b[01]+$/.test(op3) ||
-                    /^0o[0-7]+$/.test(op3) ||
-                    /^0d\d+$/.test(op3) ||
                     /^[0-9a-f]+H$/i.test(op3) ||
                     /^[01]+B$/i.test(op3) ||
-                    /^[0-7]+O$/i.test(op3) ||
+                    /^[0-7]+[OQ]$/i.test(op3) ||
                     /^\d+D$/i.test(op3)) {
                     offset = (parseAsmNum(op3) - CurPC - 4) >> 2
                 }
