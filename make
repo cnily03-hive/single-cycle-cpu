@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TOP_VERILOG_FILE="top_sim_testbench"
-INST_BIN_FILE="test/inst.bin"
+INST_ASM_FILE="test/inst.asm"
 
 IVERILOG_CC="iverilog"
 VVP_CC="vvp"
@@ -21,8 +21,8 @@ function run_test() {
     $VVP_CC "$1.vvp"
 }
 
-function hexinst() {
-    node bin2hex.js "$INST_BIN_FILE"
+function transform() {
+    node transform.js "$INST_ASM_FILE" $@
 }
 
 function clean() {
@@ -36,17 +36,17 @@ if [ "$1" == "clean" ]; then
     printmsg "Cleaning..."
     clean && \
     exit 0
-elif [ "$1" == "hexinst" ]; then
-    printmsg "Generating hexadecimal instruction file..."
-    hexinst && \
+elif [ "$1" == "inst" ]; then
+    printmsg "Analyzing instruction file..."
+    transform ${@:2} && \
     exit 0
 elif [ "$1" == "test" ]; then
     printmsg "Running test..."
     run_test "$TOP_VERILOG_FILE" && \
     exit 0
 elif [ "$1" == "" ]; then
-    printmsg "Generating hexadecimal instruction file..." && \
-    hexinst && \
+    printmsg "Analyzing instruction file..."
+    transform ${@:2} && \
     printmsg "Running \"$TOP_VERILOG_FILE.v\" ..." && \
     run_test "$TOP_VERILOG_FILE" && \
     exit 0

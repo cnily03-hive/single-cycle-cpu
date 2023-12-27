@@ -35,9 +35,9 @@ This project is a simple verilog project to implement a single cycle CPU. The CP
 
 ## Usage
 
-Edit the instruction file `inst.asm` in directory of `test/`, and translate it into binary file `inst.bin`. **Note** that the first line of instruction will not be run because that PC is initialized with 0x00000000, and the positive edge of clock which is given at the very beginnig will trigger PC add 4 and run it.
+Edit the instruction file `inst.asm` in directory of `test/`. **Note** that the first line of instruction will not be run because that PC is initialized with 0x00000000, and the positive edge of clock which is given at the very beginnig will trigger PC add 4 and run it.
 
-The command `./make hexinst` will generate the hexadecimal instruction file `inst.hex` from `inst.bin` at the same directory.
+The command `./make inst` will generate the hexadecimal instruction file `inst.hex` from `inst.asm` at the same directory.
 
 As the code snippet in `io/InstMem.v` shows, the instruction memory is initialized with the hexadecimal instruction file `inst.hex`.
 
@@ -63,7 +63,7 @@ This project offers a make tool. Some of the commands are listed below.
 
 - `./make`
 
-  Equal to `./make hexinst && ./make test`
+  Equal to `./make inst && ./make test`
 
 - `./make test`
 
@@ -77,9 +77,9 @@ This project offers a make tool. Some of the commands are listed below.
 
   Remove all the generated files
 
-- `./make hexinst`
+- `./make inst`
 
-  Generate the hexadecimal instruction file from file `inst.bin`
+  Generate the binary and hexadecimal instruction file from file `inst.asm`
 
 ## Simulation
 
