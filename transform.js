@@ -467,12 +467,30 @@ function asm2bin(input_asm_lines, options = {
      * @param {string} line a single line of asm code (this will reserve string like "LABEL:" and "LABEL: INST")
      * @returns {string} formatted line
      */
-    const formatInst = (line) =>
-        line.replace(/(#|;|\/\/).*/g, '') // remove comments
+    const formatInst = (line) => {
+        // reserve arm-style number, otherwise it will be treated as comment and removed
+        let pos = line.length
+        for (let i = 0; i < line.length; i++) {
+            if (i > pos) {
+                if (i === pos + 1 && /[\d\-]/.test(line[i])) continue
+                else if (/[\d]/.test(line[i])) continue
+                else if (i > pos + 1 && line[i] === ' ') { pos = line.length; continue }
+                line = line.slice(0, pos)
+                break
+            }
+            if (line[i] === '#') {
+                pos = i
+            }
+        }
+        line = line
+            .replace(/(;|\/\/).*/g, '') // remove comments
             .replace(/[,]/g, ' ') // replace comma with space
             .replace(/\( +/g, ' (') // remove extra spaces for left parentheses
             .replace(/ +\)/g, ') ') // remove extra spaces for right parentheses
             .replace(/ +/g, ' ').trim() // remove extra spaces
+
+        return line
+    }
 
     let asm_lines = [], jump_table = {}, bin_lines = [];
 
