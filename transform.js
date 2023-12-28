@@ -32,17 +32,21 @@ const path = require('path')
 
 
 let filepath, top_opts = {
+    help: false,
     bin: true,
     hex: true,
     comment: false,
     strict: false,
     basename: false, // same as file basename
+    "start-pc": 0,
 }, alias_map = {
+    h: "help",
     b: "bin",
     h: "hex",
     c: "comment",
     s: "strict",
     o: "basename",
+    p: "start-pc",
 }
 
 
@@ -66,7 +70,9 @@ process.argv.slice(2).forEach(function (val, index, array) {
     // Parse arguments
     if (/^--[a-zA-Z\-]+$/.test(format_val)) { // option key
         let opt_name = format_val.slice(2)
-        if (opt_name === "bin") {
+        if (opt_name === "help") {
+            top_opts["help"] = true
+        } else if (opt_name === "bin") {
             if (top_opts["hex"] && top_opts["bin"]) top_opts["hex"] = false
             top_opts[opt_name] = true
         } else if (opt_name === "hex") {
@@ -90,7 +96,23 @@ process.argv.slice(2).forEach(function (val, index, array) {
         filepath = format_val
     }
 })
+top_opts["start-pc"] = parseInt(top_opts["start-pc"])
+if (Number.isNaN(top_opts["start-pc"])) top_opts["start-pc"] = 0
 
+if (top_opts.help) {
+    io.log(`
+Usage: transform [options] <filepath>
+Options:
+    -h, --help              show this help message
+    -b, --bin               generate binary file
+    -x, --hex               generate hexified binary file
+    -c, --comment           output comment
+    -s, --strict            strict mode
+    -o, --basename <name>   basename of output file
+    -p, --start-pc <pc>     start PC
+    `.trim())
+    process.exit(0)
+}
 
 
 // Check arguments
@@ -125,15 +147,18 @@ const asm_content = fs.readFileSync(abs_filepath, 'utf8')
  * @param {Object} options
  * @param {boolean} options.warn enable warning
  * @param {boolean} options.comment enable comment
+ * @param {number} options.startPC start PC
  * @returns {Array} binary lines array
  */
 function asm2bin(input_asm_lines, options = {
     warn: true,
     comment: true,
+    startPC: 0,
 }) {
     const opts = {
         warn: typeof options.warn === 'undefined' ? true : options.warn,
         comment: typeof options.comment === 'undefined' ? true : options.comment,
+        startPC: typeof options.startPC === 'undefined' ? 0 : options.startPC,
     }
     const ENABLE_WARN = opts.warn
     const ENABLE_COMMENT = opts.comment
@@ -197,7 +222,7 @@ function asm2bin(input_asm_lines, options = {
                     ++i
                 }
                 regpos = REG_MAP[param] = i
-                io.info(`Assigned \$${i} to \$${param}`)
+                io.log(`Assigned \$${i} to \$${param}`)
             }
             if (regpos > (1 << 5) - 1) {
                 if (ENABLE_WARN) io.warn(`Line ${CurFileLine}: Register ${str}${String(regpos) === param ? '' : ` (assigned \$${regpos})`} is too large!`)
@@ -342,7 +367,8 @@ function asm2bin(input_asm_lines, options = {
                 }
                 // label
                 else if (/^[a-zA-Z_][a-zA-Z_\(\)\d]*$/i.test(op3)) {
-                    if (!jump_table[op3]) io.error(`Line ${CurFileLine}: Label ${op3} not found`).exit(1)
+                    if (typeof jump_table[op3] === "undefined")
+                        io.error(`Line ${CurFileLine}: Label ${op3} not found`).exit(1)
                     offset = (jump_table[op3] - CurPC - 4) >> 2
                 }
                 // label with offset (label+offset or label-offset)
@@ -351,7 +377,8 @@ function asm2bin(input_asm_lines, options = {
                     const [_label, _offset] = op3.split(/[+\-]/)
                     let _offset_num = spliter === '+' ? parseAsmNum(_offset) : - parseAsmNum(_offset)
 
-                    if (!jump_table[_label]) io.error(`Line ${CurFileLine}: Label ${_label} not found`).exit(1)
+                    if (typeof jump_table[_label] === "undefined")
+                        io.error(`Line ${CurFileLine}: Label ${_label} not found`).exit(1)
                     if ((jump_table[_label] >> 2) + _offset_num < 0) {
                         if (ENABLE_WARN) io.warn(`Line ${CurFileLine}: Address may be negative for ${op3}`)
                         else io.error(`Line ${CurFileLine}: Address may be negative for ${op3}`).exit(1)
@@ -374,7 +401,8 @@ function asm2bin(input_asm_lines, options = {
                 let addr
                 // label
                 if (/^[a-zA-Z_][a-zA-Z_\(\)\d]*$/i.test(op1)) {
-                    if (!jump_table[op1]) io.error(`Line ${CurFileLine}: Label ${op1} not found`).exit(1)
+                    if (typeof jump_table[op1] === "undefined")
+                        io.error(`Line ${CurFileLine}: Label ${op1} not found`).exit(1)
                     addr = jump_table[op1] >> 2
                 }
                 // label with offset (label+offset or label-offset)
@@ -383,7 +411,8 @@ function asm2bin(input_asm_lines, options = {
                     const [_label, _offset] = [op1.slice(0, op1.indexOf(spliter)), op1.slice(op1.indexOf(spliter) + 1)]
                     let _offset_num = spliter === '+' ? parseAsmNum(_offset) : - parseAsmNum(_offset)
 
-                    if (!jump_table[_label]) io.error(`Line ${CurFileLine}: Label ${_label} not found`).exit(1)
+                    if (typeof jump_table[_label] === "undefined")
+                        io.error(`Line ${CurFileLine}: Label ${_label} not found`).exit(1)
                     if ((jump_table[_label] >> 2) + _offset_num < 0) {
                         if (ENABLE_WARN) io.warn(`Line ${CurFileLine}: Address may be negative for ${op1}`)
                         else io.error(`Line ${CurFileLine}: Address may be negative for ${op1}`).exit(1)
@@ -496,8 +525,10 @@ function asm2bin(input_asm_lines, options = {
 
     // Get asm_lines
 
-    let tmpPC = 0, tmpLines = [...input_asm_lines]
+    let tmpPC = opts.startPC, tmpLines = [...input_asm_lines]
     let PC2LINE_MAP = {} // { PC: Line Number}
+
+    io.log(`Start PC: 0x${opts.startPC.toString(16).toUpperCase().padStart(8, '0')}`)
 
     for (let i = 0; i < tmpLines.length; i++) {
         PC2LINE_MAP[tmpPC] = i + 1
@@ -610,6 +641,7 @@ asm_lines = asm_content.split(/\r?\n/)
 bin_lines = asm2bin(asm_lines, {
     warn: top_opts.strict ? false : true,
     comment: top_opts.comment,
+    startPC: top_opts["start-pc"],
 })
 if (top_opts.hex) hex_lines = bin2hex(bin_lines)
 
