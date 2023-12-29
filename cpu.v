@@ -29,6 +29,7 @@ module CPU (
     output [31:0] test_rf_data  // ? TEST INTERFACE
 );
 
+    wire PC_clk, RF_clk;
     wire RF_W, M1, M2, M3, M4, M5, M6, SIGN_EXT, ZERO;
     wire [3:0]  ALU_C;
     wire [31:0] RF_rs_out, RF_rt_out, ALU_out, PC_out, NPC_out, JOIN_out;
@@ -51,12 +52,14 @@ module CPU (
     assign o_DM_addr  = ALU_out;
     assign o_DM_wdata = RF_rt_out;
 
-    assign outclk = inclk;
+    assign outclk = RF_clk;
 
     InstDecoder cpu_inst_decoder(
         inclk,
         inst,
         ZERO,
+        PC_clk,
+        RF_clk,
         IM_R,
         DM_CS, DM_R, DM_W,
         RF_W,
@@ -71,7 +74,7 @@ module CPU (
     );
 
     PC cpu_pc(
-        inclk,
+        PC_clk,
         rstn,
         MUX1_out,
         PC_out
@@ -84,7 +87,7 @@ module CPU (
     );
 
     RegFile cpu_rf(
-        inclk,
+        RF_clk,
         rstn,
         RF_W,
         rs_addr,

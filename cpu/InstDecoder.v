@@ -5,6 +5,8 @@ module InstDecoder (
     input [31:0] inst,
     input zero,
 
+    output PC_clk,
+    output RF_clk,
     output IM_R,
     output DM_CS, DM_R, DM_W,
     output RF_W,
@@ -12,6 +14,9 @@ module InstDecoder (
     output SIGN_EXT,
     output M1, output M2, M3, M4, M5, M6
 );
+
+    assign PC_clk = inclk;
+    assign RF_clk = PC_clk;
 
     wire [5:0] funct = inst[5:0];
     // wire [5:0] shamt = inst[10:6];
