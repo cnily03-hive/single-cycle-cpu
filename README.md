@@ -1,4 +1,4 @@
-# Single Cycle CPU
+# Single-Cycle CPU
 
 Thanks for supporting from [@CuzWeAre](https://github.com/CuzWeAre).
 
@@ -6,7 +6,7 @@ Thanks for supporting from [@CuzWeAre](https://github.com/CuzWeAre).
 [![Stars](https://img.shields.io/github/stars/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu/stargazers)
 [![License](https://img.shields.io/github/license/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu?tab=MIT-1-ov-file)
 
-This project is a simple verilog project to implement a single cycle CPU. The CPU is based on the MIPS instruction set on 32-bit architecture under Harvard structure. The CPU is designed to be able to run on FPGA board.
+This project is a simple verilog project to implement a single-cycle CPU. The CPU is based on the 32-bit MIPS instruction set under Harvard architecture. The CPU is designed to be able to run on FPGA board.
 
 ## Instruction Set
 
@@ -94,7 +94,7 @@ For example, you can modify `N_CLOCKS` to `10'd100` to simulate the CPU per 100 
 
 ## Hardware Testing
 
-Top module `TOP_TouchDisplay` (at `top_touch_display.v`), which depends on `constraints.xdc` as the constraint file and `lcd_module.dcp` as its display IP core, is designed and test on **LOONGSON FPGA Board (FPGA-A7-PRJ-UDB) (XC7A200T-FBG676-2)**.
+Top module `TOP_TouchDisplay` (at `top_touch_display.v`), which depends on `constraints.xdc` as the constraint file and `lcd_module.dcp` as its display IP core, is designed and test on **LOONGSON FPGA Board (FPGA-A7-PRJ-UDB XC7A200T-FBG676-2)**.
 
 For hardware testing, instance `cpu_rf` in module `Regfile` has exposed `test_addr` and `test_data`, in order that we can see the register file's content on the touch screen. To remove these two ports, just remove all the lines or blocks in this project with comment `? TEST INTERFACE`.
 

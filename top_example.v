@@ -7,7 +7,7 @@ module TOP (
     input  inclk, // CPU clock
     input  rstn,  // CPU reset
 
-    output clk    // output clock
+    output outclk // output clock
 );
 
     wire [31:0] PC;
@@ -23,13 +23,12 @@ module TOP (
     wire [31:0] test_rf_data; // ? TEST INTERFACE
     wire [31:0] test_rf_addr; // ? TEST INTERFACE
 
-    assign clk = inclk;
-
     CPU sccpu(
         inclk,
         rstn,
         inst,
         DM_rdata,
+        outclk,
         IM_R,
         DM_CS,
         DM_R,
@@ -49,7 +48,7 @@ module TOP (
     );
 
     DataMem dmem(
-        inclk,
+        outclk,
         DM_CS,
         DM_R,
         DM_W,

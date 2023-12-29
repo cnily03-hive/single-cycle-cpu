@@ -174,11 +174,11 @@ module TOP_TouchDisplay (
     parameter FREQ_DIV = 100; // 1MHz, 1E-6s (1us)
 
     wire clk_1000ns, clk_500ns;
-    FreqDiv #(FREQ_DIV) clk_gen(
+    FreqDiv #(FREQ_DIV) clk_gen_1000ns(
         clk,
         clk_1000ns
     );
-    FreqDiv #(FREQ_DIV / 2) clk_gen2(
+    FreqDiv #(FREQ_DIV / 2) clk_gen_500ns(
         clk,
         clk_500ns
     );
@@ -232,10 +232,10 @@ module TOP_TouchDisplay (
             end
         end
     endfunction
-    localparam N2A50 = FREQ_DIV * 2 + 50;
-    localparam N2A50bit = log2(N2A50);
+    localparam N2 = FREQ_DIV + 50;
+    localparam N2bit = log2(N2);
 
-    reg  [N2A50bit:0] enable_cnt1, enable_cnt2;
+    reg  [N2bit:0] enable_cnt1, enable_cnt2;
     wire enable1 = |enable_cnt1;
     wire enable2 = |enable_cnt2;
     reg  [31:0] input1, input2;
@@ -270,6 +270,8 @@ module TOP_TouchDisplay (
 
     // CPU declaration
 
+    wire cpu_outclk;
+
     localparam REGFILE_DISPLAY_START_NUMBER = 13;
     parameter  REGFILE_DISPLAY_RANGE = 32;
     parameter  REGFILE_START_ADDR = 32'b0000;
@@ -280,6 +282,7 @@ module TOP_TouchDisplay (
         cpu_rstn_d,
         inst,
         DM_rdata,
+        cpu_outclk,
         IM_R,
         DM_CS,
         DM_R,
@@ -299,7 +302,7 @@ module TOP_TouchDisplay (
     );
 
     DataMem dmem(
-        (DM_CS_ctl & DM_W_ctl) ? clk_1000ns   : cpu_inclk,
+        (DM_CS_ctl & DM_W_ctl) ? clk_500ns    : cpu_outclk,
         DM_CS | DM_CS_ctl,
         DM_R,
         DM_W | DM_W_ctl,
@@ -322,11 +325,11 @@ module TOP_TouchDisplay (
             // Set display value
             if (input_sel == 0) begin
                 input1 <= input_value;
-                enable_cnt1 <= N2A50;
+                enable_cnt1 <= N2;
             end
             else if (input_sel == 1) begin
                 input2 <= input_value;
-                enable_cnt2 <= N2A50;
+                enable_cnt2 <= N2;
             end
         end
 

@@ -15,6 +15,7 @@ module CPU (
     input [31:0] inst,
     input [31:0] i_DM_rdata,
 
+    output outclk,
     output IM_R,
     output DM_CS,
     output DM_R,
@@ -49,6 +50,8 @@ module CPU (
     assign o_ALU_out  = ALU_out;
     assign o_DM_addr  = ALU_out;
     assign o_DM_wdata = RF_rt_out;
+
+    assign outclk = inclk;
 
     InstDecoder cpu_inst_decoder(
         inclk,
@@ -94,7 +97,7 @@ module CPU (
         test_rf_data  // ? TEST INTERFACE
     );
 
-    ALU cpu_aluu(
+    ALU cpu_alu(
         MUX3_out,
         MUX4_out,
         ALU_C,
