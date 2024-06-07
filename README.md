@@ -1,12 +1,12 @@
 # Single-Cycle CPU
 
-Thanks for supporting from [@CuzWeAre](https://github.com/CuzWeAre).
-
 [![Issues](https://img.shields.io/github/issues-raw/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu/issues)
 [![Stars](https://img.shields.io/github/stars/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu/stargazers)
 [![License](https://img.shields.io/github/license/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu?tab=MIT-1-ov-file)
 
 This project is a simple verilog project to implement a single-cycle CPU. The CPU is based on the 32-bit MIPS instruction set under Harvard architecture. The CPU is designed to be able to run on FPGA board.
+
+For course report, see [docs/course-report.pdf](./docs/course-report.pdf).
 
 ## Instruction Set
 
