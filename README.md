@@ -1,8 +1,8 @@
 # Single-Cycle CPU
 
-[![Issues](https://img.shields.io/github/issues-raw/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu/issues)
-[![Stars](https://img.shields.io/github/stars/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu/stargazers)
-[![License](https://img.shields.io/github/license/Cnily03/single-cycle-cpu)](https://github.com/Cnily03/single-cycle-cpu?tab=MIT-1-ov-file)
+[![Issues](https://img.shields.io/github/issues-raw/cnily03-hive/single-cycle-cpu)](https://github.com/cnily03-hive/single-cycle-cpu/issues)
+[![Stars](https://img.shields.io/github/stars/cnily03-hive/single-cycle-cpu)](https://github.com/cnily03-hive/single-cycle-cpu/stargazers)
+[![License](https://img.shields.io/github/license/cnily03-hive/single-cycle-cpu)](https://github.com/cnily03-hive/single-cycle-cpu?tab=MIT-1-ov-file)
 
 This project is a simple verilog project to implement a single-cycle CPU. The CPU is based on the 32-bit MIPS instruction set under Harvard architecture. The CPU is designed to be able to run on FPGA board.
 
@@ -138,4 +138,4 @@ The basic clock frequency is 100 MHz. The CPU clock is 1 MHz. Debounce time is 1
 
 CopyRight (c) Cnily03. All rights reserved.
 
-Licensed under the [MIT](https://github.com/Cnily03/single-cycle-cpu?tab=MIT-1-ov-file) License.
+Licensed under the [MIT](./LICENSE) License.
