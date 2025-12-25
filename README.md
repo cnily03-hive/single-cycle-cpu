@@ -35,9 +35,12 @@ For course report, see [docs/course-report.pdf](./docs/course-report.pdf).
 
 ## Usage
 
-Edit the instruction file `inst.asm` in directory of `test/`. **Note** that the first line of instruction will not be run because that PC is initialized with 0x00000000, and the positive edge of clock which is given at the very beginnig will trigger PC add 4 and run it.
+Edit the instruction file `inst.asm` in directory of `test/`.
 
-The command `./make inst` will generate the hexadecimal instruction file `inst.hex` from `inst.asm` at the same directory.
+> [!Note]
+> The first line of instruction may not be run. The duration of the first PC, which is initialized with `0x00000000`, is shorter than one clock cycle time. During this short time caused by the positive edge of clock given at the very beginning, other components would finished initializing, and then wait for the next positive edge of clock and to trigger PC adding 4.
+
+The command `make inst` will generate the hexadecimal instruction file `inst.hex` from `inst.asm` at the same directory. A derived online tool [asm.tampoo.io](https://asm.tampoo.io) is developed for this purpose.
 
 As the code snippet in `io/InstMem.v` shows, the instruction memory is initialized with the hexadecimal instruction file `inst.hex`.
 
@@ -57,40 +60,54 @@ end
 
 The example instruction file offered in `test` directory solves the problem of whether a year is a leap year. The year number is loaded from the address of `0x00000000` in data memory, and the result (`0` for no, `1` for yes) will be saved at the address of `0x00000008` in data memory.
 
-## Development Tool
+## Development
 
-This project offers a make tool. Some of the commands are listed below.
+This project offers a [Makefile](Makefile). Run `make help` for usage.
 
-- `./make`
+```plaintext
+Usage:
+  make            - Transform instruction file and run test
+  make help       - Show this help message
+  make inst       - Analyze instruction file only
+  make test       - Run test only
+  make clean      - Remove build artifacts (*.vvp, *.vcd, *.out)
+  make <file>     - Simulate specified verilog file
+       <file>.vvp
+```
 
-  Equal to `./make inst && ./make test`
+For simulation, make sure the following packages are installed on your system:
 
-- `./make test`
+- [iverilog](https://github.com/steveicarus/iverilog)
+- [GTKWave](https://github.com/gtkwave/gtkwave)
 
-  Compile and run the testbench (default: `top_sim_testbench.v`)
+On Ubuntu/Debian-like linux, they can be easily installed:
 
-- `./make <file>` or `./make <file>.v`
+```shell
+apt-get install -y iverilog gtkwave
+```
 
-  Compile and run the specified verilog file
+The `make inst` runs a JS script. Make sure you have any JavaScript runtime installed. `node` is taken default in [Makefile](Makefile).
 
-- `./make clean`
+Devcontainer is provided with recommended environment configured. You can launch a container on your IDE or create a codespace.
 
-  Remove all the generated files
-
-- `./make inst`
-
-  Generate the binary and hexadecimal instruction file from file `inst.asm`
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cnily03-hive/single-cycle-cpu?quickstart=1)
 
 ## Simulation
 
-Run `./make test` to simulate the CPU. If the wave cannot meet the needs, modify the following fields at the top of the file `top_sim_testbench.v`.
+Run `make test` to simulate the CPU. If the wave cannot meet the needs, modify the following fields at the top of the file `top_sim_testbench.v`.
 
 ```verilog
 `define N_CLOCKS  10'd500
 `define N_OPERATE $stop
 ```
 
-For example, you can modify `N_CLOCKS` to `10'd100` to simulate the CPU per 100 clocks, then enter `cont` in the terminal prompt to continue next 100 clocks of simulation, or you can modify `N_OPERATE` to `$finish` to finish and exit the simulation after N_CLOCKS clocks.
+For example, you can modify `N_CLOCKS` to `10'd100` to simulate the CPU per 100 clocks, then enter `cont` in the terminal prompt to continue next 100 clocks of simulation.
+
+You can modify `N_OPERATE` to `$finish` to finish and exit the simulation after N_CLOCKS clocks. In [vvp flags](https://steveicarus.github.io/iverilog/usage/vvp_flags.html), option `-n` means `non-interactive ($stop = $finish)`, you can also comment the following line in [Makefile](Makefile).
+
+```shell
+VVP_FLAGS := -n
+```
 
 ## Hardware Testing
 
