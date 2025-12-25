@@ -1,0 +1,34 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "VARIANT": "bullseye"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": "true",
+      "username": "vscode",
+      "userUid": "1000",
+      "userGid": "1000",
+      "upgradePackages": "true"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": "false"
+    },
+  },
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "wavetrace.wavetrace",
+        "ms-vscode.makefile-tools"
+      ]
+    }
+  }
+}
