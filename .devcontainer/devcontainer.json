@@ -15,8 +15,8 @@
     },
     "ghcr.io/devcontainers/features/git:1": {
       "version": "latest",
-      "ppa": "false"
-    },
+      "ppa": "true"
+    }
   },
   "runArgs": [
     "--cap-add=SYS_PTRACE",
@@ -27,7 +27,8 @@
     "vscode": {
       "extensions": [
         "wavetrace.wavetrace",
-        "ms-vscode.makefile-tools"
+        "ms-vscode.makefile-tools",
+        "GitHub.vscode-github-actions"
       ]
     }
   }
