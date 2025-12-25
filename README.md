@@ -66,12 +66,12 @@ This project offers a [Makefile](Makefile). Run `make help` for usage.
 
 ```plaintext
 Usage:
-  make            - Transform instruction file and run test
-  make help       - Show this help message
-  make inst       - Analyze instruction file only
-  make test       - Run test only
-  make clean      - Remove build artifacts (*.vvp, *.vcd, *.out)
-  make <file>     - Simulate specified verilog file
+  make              - Transform instruction file and run test
+  make help         - Show this help message
+  make inst         - Analyze and transform instruction file only
+  make test         - Run test only
+  make clean        - Remove build artifacts (*.vvp, *.vcd, *.out)
+  make <file>       - Simulate specified verilog file
        <file>.vvp
 ```
 
@@ -103,10 +103,10 @@ Run `make test` to simulate the CPU. If the wave cannot meet the needs, modify t
 
 For example, you can modify `N_CLOCKS` to `10'd100` to simulate the CPU per 100 clocks, then enter `cont` in the terminal prompt to continue next 100 clocks of simulation.
 
-You can modify `N_OPERATE` to `$finish` to finish and exit the simulation after N_CLOCKS clocks. In [vvp flags](https://steveicarus.github.io/iverilog/usage/vvp_flags.html), option `-n` means `non-interactive ($stop = $finish)`, you can also comment the following line in [Makefile](Makefile).
+You can modify `N_OPERATE` to `$finish` to finish and exit the simulation after N_CLOCKS clocks. Or you can set environment variable `DEBIAN_FRONTEND=noninteractive` to add `-n` to [VVP_FLAGS](https://steveicarus.github.io/iverilog/usage/vvp_flags.html), which means `non-interactive ($stop = $finish)`. For example:
 
 ```shell
-VVP_FLAGS := -n
+DEBIAN_FRONTEND=noninteractive make
 ```
 
 ## Hardware Testing

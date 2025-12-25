@@ -11,7 +11,11 @@ NODE := node
 RM := rm -rf
 
 # Flags
+ifeq ($(DEBIAN_FRONTEND),noninteractive)
 VVP_FLAGS := -n
+else
+VVP_FLAGS :=
+endif
 
 # Color output
 BLUE := \033[34m
@@ -24,11 +28,11 @@ RESET := \033[0m
 .SECONDARY:
 
 # Default target: transform and test
-all: inst test
+all: inst $(TOP_VERILOG_FILE)
 
 # Transform instruction file only
 inst:
-	@echo "$(CYAN)Analyzing instruction file...$(RESET)"
+	@echo "$(BLUE)Analyzing and Transforming $(CYAN)$(INST_ASM_FILE)$(BLUE) ...$(RESET)"
 	@$(NODE) transform.js $(INST_ASM_FILE)
 
 # Run test only
@@ -42,12 +46,12 @@ clean:
 # Help target
 help:
 	@echo "Usage:"
-	@echo "  make            - Transform instruction file and run test"
-	@echo "  make help       - Show this help message"
-	@echo "  make inst       - Analyze instruction file only"
-	@echo "  make test       - Run test only"
-	@echo "  make clean      - Remove build artifacts (*.vvp, *.vcd, *.out)"
-	@echo "  make <file>     - Simulate specified verilog file"
+	@echo "  make              - Transform instruction file and run test"
+	@echo "  make help         - Show this help message"
+	@echo "  make inst         - Analyze and transform instruction file only"
+	@echo "  make test         - Run test only"
+	@echo "  make clean        - Remove build artifacts (*.vvp, *.vcd, *.out)"
+	@echo "  make <file>       - Simulate specified verilog file"
 	@echo "       <file>.vvp"
 
 %.vvp:
